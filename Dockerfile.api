@@ -1,0 +1,22 @@
+# Imagen del adaptador HTTP SES.HOSPEDAJES → n8n
+# Contexto de build: directorio scripts/ (contiene generador_parte.py, ses_hospedajes.py, certs/)
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Dependencias Python
+COPY api/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Módulos del proyecto
+COPY generador_parte.py .
+COPY ses_hospedajes.py .
+COPY certs/ ./certs/
+
+# La API
+COPY api/app.py .
+
+EXPOSE 5000
+
+# En producción sustituir por gunicorn
+CMD ["python3", "app.py"]
