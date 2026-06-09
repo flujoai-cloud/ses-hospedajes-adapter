@@ -160,8 +160,7 @@ def alta_parte():
     except KeyError as e:
         return jsonify({"ok": False, "error": f"Campo obligatorio ausente: {e}"}), 400
     except Exception as e:
-        import traceback
-        return jsonify({"ok": False, "error": "interno", "tipo": type(e).__name__, "detalle": str(e), "traceback": traceback.format_exc()[-1800:]}), 500
+        return jsonify({"ok": False, "error": "interno", "tipo": type(e).__name__, "detalle": str(e)}), 500
 
 
 @app.route("/parte/lote/<numero_lote>", methods=["GET"])
