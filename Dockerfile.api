@@ -4,6 +4,9 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# Certificados raíz del sistema (necesarios para validar el TLS del Ministerio)
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
 # Dependencias Python
 COPY api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

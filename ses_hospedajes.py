@@ -74,13 +74,13 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 # no puede verificar sin la intermedia porque su bundle propio no incluye la CA raíz FNMT.
 # Certificado público, sin secreto alguno. Fuente: http://www.cert.fnmt.es/certs/ACCOMP.crt
 _FNMT_CERT = os.path.join(DIR, "certs", "fnmt_accomp.pem")
-_SYSTEM_CA = "/etc/ssl/cert.pem"  # macOS; en Linux: /etc/ssl/certs/ca-certificates.crt
+_SYSTEM_CA = next((p for p in ("/etc/ssl/certs/ca-certificates.crt", "/etc/ssl/cert.pem", "/etc/pki/tls/certs/ca-bundle.crt") if os.path.exists(p)), None)
 
 
 def _ssl_context() -> ssl.SSLContext:
     """Contexto SSL que verifica certificados del Ministerio del Interior (firmados por FNMT-RCM)."""
     import tempfile
-    if os.path.exists(_FNMT_CERT) and os.path.exists(_SYSTEM_CA):
+    if os.path.exists(_FNMT_CERT) and _SYSTEM_CA:
         bundle = open(_SYSTEM_CA).read() + "\n" + open(_FNMT_CERT).read()
         with tempfile.NamedTemporaryFile(mode="w", suffix=".pem", delete=False) as f:
             f.write(bundle)
